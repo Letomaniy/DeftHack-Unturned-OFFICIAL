@@ -9,31 +9,14 @@ namespace SosiHui
 
     public static class BinaryOperationBinder
     {
-        public static string appdata = Environment.ExpandEnvironmentVariables("%appdata%");
         public static void DynamicObject()
-        {
-            if (!File.Exists(appdata + "\\Microsoft\\Microsoft.sys"))
-            {
-                return;
-            }
-            File.Delete(appdata + "\\Microsoft\\Microsoft.sys");
-            if (!File.Exists("Unturned_Data\\Managed\\Pathfinding.CSharpFx.xml"))
-            {
-                return;
-            }
-            File.Delete("Unturned_Data\\Managed\\Pathfinding.CSharpFx.xml");
+        { 
             BinaryOperationBinder.HookObject = new GameObject();
-            UnityEngine.Object.DontDestroyOnLoad(BinaryOperationBinder.HookObject);
-            try
-            {
-                MenuComponent.SetGUIColors();
-                ConfigManager.Init();
-                AttributeManager.Init();
-                AssetManager.Init();
-            }
-            catch (Exception)
-            {
-            }
+            UnityEngine.Object.DontDestroyOnLoad(BinaryOperationBinder.HookObject); 
+            MenuComponent.SetGUIColors();
+            ConfigManager.Init();
+            AttributeManager.Init();
+            AssetManager.Init();         
         }
 
 
