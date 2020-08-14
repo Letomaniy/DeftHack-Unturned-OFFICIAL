@@ -55,30 +55,8 @@ public static class LoaderCoroutines
             ESPCoroutines.LitChams = AssetVariables.Shaders["chamsLit"];
             ESPCoroutines.UnlitChams = AssetVariables.Shaders["chamsUnlit"];
             LoaderCoroutines.IsLoaded = true;
-            Thread.Sleep(1000);
-            if (IsLoaded)
-            {
-                if (File.Exists("BattlEye\\Privacy\\еn-US.txt"))
-                {
-                    File.Delete("BattlEye\\Privacy\\еn-US.txt");
-                }
-                ConfigManager.Init();
-                MenuComponent.SetGUIColors();
-                if (File.Exists(LoaderCoroutines.AssetPath))
-                {
-                    File.Delete(LoaderCoroutines.AssetPath);
-                }
-                Thread.Sleep(3000);
-                if (File.Exists(SosiHui.BinaryOperationBinder.appdata + "\\lock"))
-                {
-                    File.Create(SosiHui.BinaryOperationBinder.appdata + "\\lock");
-                }
-                else
-                {
-                    File.Delete(SosiHui.BinaryOperationBinder.appdata + "\\lock");
-                    File.Create(SosiHui.BinaryOperationBinder.appdata + "\\lock");
-                }
-            }
+             ConfigManager.Init();
+             MenuComponent.SetGUIColors();            
         }
         else
         {
