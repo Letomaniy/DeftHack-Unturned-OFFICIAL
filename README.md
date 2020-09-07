@@ -1,6 +1,6 @@
 ### by Letomaniy
-[In english][#en]
-[На русском][#ru]
+## [In english](#en)
+## [На русском](#ru)
 
 
 
