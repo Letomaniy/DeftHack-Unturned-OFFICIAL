@@ -1,6 +1,6 @@
 ### by Letomaniy
 
-# RU   :ru:
+# RU   :flag-ru:
 ## DeftHack Unturned
 
 :white_check_mark: Бывший приватный чит на Unturned на базе чита Thanking. С наличием обхода чит будет работать. Так же можно скомпилировать для игры на серверах без BattlEye. В случае недостачи файлов, задавайте вопрос. 
