@@ -1,4 +1,48 @@
 ### by Letomaniy
+[In english][#en]
+[На русском][#ru]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # RU    
 ## DeftHack Unturned информация
