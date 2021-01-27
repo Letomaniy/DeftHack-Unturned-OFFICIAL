@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-
+using UnityEngine; 
 
 [Component]
 public class MirrorCameraComponent : MonoBehaviour
@@ -57,10 +56,10 @@ public class MirrorCameraComponent : MonoBehaviour
             if (flag2)
             {
                 UnityEngine.Object.Destroy(MirrorCameraComponent.subCam);
-            }
+            } 
             MirrorCameraComponent.subCam = MirrorCameraComponent.cam_obj.AddComponent<Camera>();
-            MirrorCameraComponent.subCam.CopyFrom(OptimizationVariables.MainCam);
-            MirrorCameraComponent.cam_obj.AddComponent<GUILayer>();
+            MirrorCameraComponent.subCam.CopyFrom(OptimizationVariables.MainCam); 
+            //MirrorCameraComponent.cam_obj.AddComponent<>();
             MirrorCameraComponent.cam_obj.transform.position = OptimizationVariables.MainCam.gameObject.transform.position;
             MirrorCameraComponent.cam_obj.transform.rotation = OptimizationVariables.MainCam.gameObject.transform.rotation;
             MirrorCameraComponent.cam_obj.transform.Rotate(0f, 180f, 0f);
