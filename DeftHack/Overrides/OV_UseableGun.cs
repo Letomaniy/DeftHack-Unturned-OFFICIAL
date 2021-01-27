@@ -1,4 +1,4 @@
-﻿using SDG.Unturned;
+using SDG.Unturned;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -34,10 +34,10 @@ public class OV_UseableGun
         {
             bool flag = Time.realtimeSinceStartup - PlayerLifeUI.hitmarkers[0].lastHit > PlayerUI.HIT_TIME;
             if (flag)
-            {
-                PlayerLifeUI.hitmarkers[0].hitBuildImage.isVisible = false;
-                PlayerLifeUI.hitmarkers[0].hitCriticalImage.isVisible = false;
-                PlayerLifeUI.hitmarkers[0].hitEntitiyImage.isVisible = false;
+            { 
+                PlayerLifeUI.hitmarkers[0].image.isVisible = false; 
+                //PlayerLifeUI.hitmarkers[0].hitCriticalImage.isVisible = false;
+                //PlayerLifeUI.hitmarkers[0].hitEntitiyImage.isVisible = false;
             }
             ItemGunAsset itemGunAsset = (ItemGunAsset)OptimizationVariables.MainPlayer.equipment.asset;
             PlayerLook look = OptimizationVariables.MainPlayer.look;
@@ -318,4 +318,3 @@ public class OV_UseableGun
      
     public static FieldInfo BulletsField;
 }
-
