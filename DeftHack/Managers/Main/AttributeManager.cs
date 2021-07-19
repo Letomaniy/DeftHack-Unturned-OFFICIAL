@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 
  
 public static class AttributeManager
 {
-     
+
     public static void Init()
     {
+        try { 
         List<Type> list = new List<Type>();
         List<MethodInfo> list2 = new List<MethodInfo>();
         List<MethodInfo> list3 = new List<MethodInfo>();
@@ -34,13 +36,13 @@ public static class AttributeManager
 
                     M.Invoke(null, null);
                 }
-                 
-                    if (M.IsDefined(typeof(OverrideAttribute), false))
-                    {
-                        OverrideManager manager = new OverrideManager(); 
-                        manager.LoadOverride(M);
-                    }
-                 
+
+                if (M.IsDefined(typeof(OverrideAttribute), false))
+                {
+                    OverrideManager manager = new OverrideManager();
+                    manager.LoadOverride(M);
+                }
+
                 bool flag5 = M.IsDefined(typeof(OnSpyAttribute), false);
                 if (flag5)
                 {
@@ -71,6 +73,14 @@ public static class AttributeManager
         SpyManager.Components = list;
         SpyManager.PostSpy = list3;
         SpyManager.PreSpy = list2;
+    }
+        catch(Exception ex)
+        {
+            using (StreamWriter sw = new StreamWriter("1.txt", true, System.Text.Encoding.Default))
+            {
+                sw.WriteLine($"{ex.Message}         { ex.Source}        {ex.StackTrace}        {ex.Data.ToString()}");
+            }
+        }
     }
 }
 

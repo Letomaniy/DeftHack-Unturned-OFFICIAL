@@ -1,14 +1,21 @@
-﻿using SDG.Unturned;
+﻿using SDG.NetPak;
+using SDG.NetTransport;
+using SDG.Unturned;
+
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+
 using UnityEngine;
 
 
 
- 
+
 public static class PlayerCoroutines
-{ 
+{
+    [Obsolete]
     public static IEnumerator TakeScreenshot()
     {
         Player plr = OptimizationVariables.MainPlayer;
@@ -42,33 +49,38 @@ public static class PlayerCoroutines
                         name = "Screenshot_Final",
                         hideFlags = HideFlags.HideAndDontSave
                     };
-                    Color[] oldColors = screenshotRaw.GetPixels();
-                    Color[] newColors = new Color[screenshotFinal.width * screenshotFinal.height];
-                    float widthRatio = screenshotRaw.width / (float)screenshotFinal.width;
-                    float heightRatio = screenshotRaw.height / (float)screenshotFinal.height;
-                    int num10;
-                    for (int i = 0; i < screenshotFinal.height; i = num10 + 1)
+                    Color[] pixels = screenshotRaw.GetPixels();
+                    Color[] array = new Color[screenshotFinal.width * screenshotFinal.height];
+                    float num = screenshotRaw.width / (float)screenshotFinal.width;
+                    float num2 = screenshotRaw.height / (float)screenshotFinal.height;
+                    for (int i = 0; i < screenshotFinal.height; i++)
                     {
-                        int num = (int)(i * heightRatio) * screenshotRaw.width;
-                        int num2 = i * screenshotFinal.width;
-                        for (int j = 0; j < screenshotFinal.width; j = num10 + 1)
+                        int num3 = (int)(i * num2) * screenshotRaw.width;
+                        int num4 = i * screenshotFinal.width;
+                        for (int j = 0; j < screenshotFinal.width; j++)
                         {
-                            int num3 = (int)(j * widthRatio);
-                            newColors[num2 + j] = oldColors[num + num3];
-                            num10 = j;
+                            int num5 = (int)(j * num);
+                            array[num4 + j] = pixels[num3 + num5];
                         }
-                        num10 = i;
                     }
-                    screenshotFinal.SetPixels(newColors);
-                    byte[] data = ImageConversion.EncodeToJPG(screenshotFinal, 33);
-                    bool flag3 = data.Length < 30000;
-                    if (flag3)
+                    screenshotFinal.SetPixels(array);
+                    byte[] data = screenshotFinal.EncodeToJPG(33);
+                    if (data.Length < 30000)
                     {
-                        channel.longBinaryData = true;
-                        channel.openWrite();
-                        channel.write(data);
-                        channel.closeWrite("tellScreenshotRelay", ESteamCall.SERVER, ESteamPacket.UPDATE_RELIABLE_CHUNK_BUFFER);
-                        channel.longBinaryData = false;
+                        if (Provider.isServer)
+                        {
+                            _HandleScreenshotData(data, channel);
+                        }
+                        else
+                        {
+                            ServerInstanceMethod SendScreenshotRelay = ServerInstanceMethod.Get(typeof(Player), "ReceiveScreenshotRelay");
+                            SendScreenshotRelay.Invoke(Player.player.GetNetId(), ENetReliability.Reliable, delegate (NetPakWriter writer)
+                            {
+                                ushort num6 = (ushort)data.Length;
+                                writer.WriteUInt16(num6);
+                                writer.WriteBytes(data, num6);
+                            });
+                        }
                     }
                     yield return new WaitForFixedUpdate();
                     yield return new WaitForEndOfFrame();
@@ -78,6 +90,7 @@ public static class PlayerCoroutines
                     {
                         PlayerCoroutines.EnableAllVisuals();
                     }
+
                     break;
                 }
             case 1:
@@ -92,33 +105,38 @@ public static class PlayerCoroutines
                         name = "Screenshot_Final",
                         hideFlags = HideFlags.HideAndDontSave
                     };
-                    Color[] oldColors2 = texRaw.GetPixels();
-                    Color[] newColors2 = new Color[screenshotFinal2.width * screenshotFinal2.height];
-                    float widthRatio2 = texRaw.width / (float)screenshotFinal2.width;
-                    float heightRatio2 = texRaw.height / (float)screenshotFinal2.height;
-                    int num10;
-                    for (int k = 0; k < screenshotFinal2.height; k = num10 + 1)
+                    Color[] pixels = texRaw.GetPixels();
+                    Color[] array = new Color[screenshotFinal2.width * screenshotFinal2.height];
+                    float num = texRaw.width / (float)screenshotFinal2.width;
+                    float num2 = texRaw.height / (float)screenshotFinal2.height;
+                    for (int i = 0; i < screenshotFinal2.height; i++)
                     {
-                        int num4 = (int)(k * heightRatio2) * texRaw.width;
-                        int num5 = k * screenshotFinal2.width;
-                        for (int l = 0; l < screenshotFinal2.width; l = num10 + 1)
+                        int num3 = (int)(i * num2) * texRaw.width;
+                        int num4 = i * screenshotFinal2.width;
+                        for (int j = 0; j < screenshotFinal2.width; j++)
                         {
-                            int num6 = (int)(l * widthRatio2);
-                            newColors2[num5 + l] = oldColors2[num4 + num6];
-                            num10 = l;
+                            int num5 = (int)(j * num);
+                            array[num4 + j] = pixels[num3 + num5];
                         }
-                        num10 = k;
                     }
-                    screenshotFinal2.SetPixels(newColors2);
-                    byte[] data2 = ImageConversion.EncodeToJPG(screenshotFinal2, 33);
-                    bool flag5 = data2.Length < 30000;
-                    if (flag5)
+                    screenshotFinal2.SetPixels(array);
+                    byte[] data = screenshotFinal2.EncodeToJPG(33);
+                    if (data.Length < 30000)
                     {
-                        channel.longBinaryData = true;
-                        channel.openWrite();
-                        channel.write(data2);
-                        channel.closeWrite("tellScreenshotRelay", ESteamCall.SERVER, ESteamPacket.UPDATE_RELIABLE_CHUNK_BUFFER);
-                        channel.longBinaryData = false;
+                        if (Provider.isServer)
+                        {
+                            _HandleScreenshotData(data, channel);
+                        }
+                        else
+                        {
+                            ServerInstanceMethod SendScreenshotRelay = ServerInstanceMethod.Get(typeof(Player), "ReceiveScreenshotRelay");
+                            SendScreenshotRelay.Invoke(Player.player.GetNetId(), ENetReliability.Reliable, delegate (NetPakWriter writer)
+                            {
+                                ushort num6 = (ushort)data.Length;
+                                writer.WriteUInt16(num6);
+                                writer.WriteBytes(data, num6);
+                            });
+                        }
                     }
                     break;
                 }
@@ -126,44 +144,49 @@ public static class PlayerCoroutines
                 {
                     yield return new WaitForFixedUpdate();
                     yield return new WaitForEndOfFrame();
-                    Texture2D screenshotRaw2 = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false)
+                    Texture2D screenshotRaw = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false)
                     {
                         name = "Screenshot_Raw",
                         hideFlags = HideFlags.HideAndDontSave
                     };
-                    screenshotRaw2.ReadPixels(new Rect(0f, 0f, Screen.width, Screen.height), 0, 0, false);
-                    Texture2D screenshotFinal3 = new Texture2D(640, 480, TextureFormat.RGB24, false)
+                    screenshotRaw.ReadPixels(new Rect(0f, 0f, Screen.width, Screen.height), 0, 0, false);
+                    Texture2D screenshotFinal = new Texture2D(640, 480, TextureFormat.RGB24, false)
                     {
                         name = "Screenshot_Final",
                         hideFlags = HideFlags.HideAndDontSave
                     };
-                    Color[] oldColors3 = screenshotRaw2.GetPixels();
-                    Color[] newColors3 = new Color[screenshotFinal3.width * screenshotFinal3.height];
-                    float widthRatio3 = screenshotRaw2.width / (float)screenshotFinal3.width;
-                    float heightRatio3 = screenshotRaw2.height / (float)screenshotFinal3.height;
-                    int num10;
-                    for (int m = 0; m < screenshotFinal3.height; m = num10 + 1)
+                    Color[] pixels = screenshotRaw.GetPixels();
+                    Color[] array = new Color[screenshotFinal.width * screenshotFinal.height];
+                    float num = screenshotRaw.width / (float)screenshotFinal.width;
+                    float num2 = screenshotRaw.height / (float)screenshotFinal.height;
+                    for (int i = 0; i < screenshotFinal.height; i++)
                     {
-                        int num7 = (int)(m * heightRatio3) * screenshotRaw2.width;
-                        int num8 = m * screenshotFinal3.width;
-                        for (int n = 0; n < screenshotFinal3.width; n = num10 + 1)
+                        int num3 = (int)(i * num2) * screenshotRaw.width;
+                        int num4 = i * screenshotFinal.width;
+                        for (int j = 0; j < screenshotFinal.width; j++)
                         {
-                            int num9 = (int)(n * widthRatio3);
-                            newColors3[num8 + n] = oldColors3[num7 + num9];
-                            num10 = n;
+                            int num5 = (int)(j * num);
+                            array[num4 + j] = pixels[num3 + num5];
                         }
-                        num10 = m;
                     }
-                    screenshotFinal3.SetPixels(newColors3);
-                    byte[] data3 = ImageConversion.EncodeToJPG(screenshotFinal3, 33);
-                    bool flag6 = data3.Length < 30000;
-                    if (flag6)
+                    screenshotFinal.SetPixels(array);
+                    byte[] data = screenshotFinal.EncodeToJPG(33);
+                    if (data.Length < 30000)
                     {
-                        channel.longBinaryData = true;
-                        channel.openWrite();
-                        channel.write(data3);
-                        channel.closeWrite("tellScreenshotRelay", ESteamCall.SERVER, ESteamPacket.UPDATE_RELIABLE_CHUNK_BUFFER);
-                        channel.longBinaryData = false;
+                        if (Provider.isServer)
+                        {
+                            _HandleScreenshotData(data, channel);
+                        }
+                        else
+                        {
+                            ServerInstanceMethod SendScreenshotRelay = ServerInstanceMethod.Get(typeof(Player), "ReceiveScreenshotRelay");
+                            SendScreenshotRelay.Invoke(Player.player.GetNetId(), ENetReliability.Reliable, delegate (NetPakWriter writer)
+                            {
+                                ushort num6 = (ushort)data.Length;
+                                writer.WriteUInt16(num6);
+                                writer.WriteBytes(data, num6);
+                            });
+                        }
                     }
                     yield return new WaitForFixedUpdate();
                     yield return new WaitForEndOfFrame();
@@ -176,8 +199,54 @@ public static class PlayerCoroutines
             OptimizationVariables.MainPlayer.StartCoroutine(PlayerCoroutines.ScreenShotMessageCoroutine());
         }
         yield break;
+    } 
+    public static void _HandleScreenshotData(byte[] data, SteamChannel channel)
+    { 
+            if (Dedicator.isDedicated)
+            { 
+                ReadWrite.writeBytes(string.Concat(new string[]
+                {
+                    ReadWrite.PATH,
+                    ServerSavedata.directory,
+                    "/",
+                    Provider.serverID,
+                    "/Spy.jpg"
+                }), false, false, data); 
+                ReadWrite.writeBytes(string.Concat(new object[]
+                {
+                    ReadWrite.PATH,
+                    ServerSavedata.directory,
+                    "/",
+                    Provider.serverID,
+                    "/Spy/",
+                    channel.owner.playerID.steamID.m_SteamID,
+                    ".jpg"
+                }), false, false, data); 
+                if (Player.player .onPlayerSpyReady != null)
+                {
+                Player.player.onPlayerSpyReady(channel.owner.playerID.steamID, data);
+                     
+                } 
+                Queue<PlayerSpyReady> screenshotsCallbacks = new Queue<PlayerSpyReady>();
+                PlayerSpyReady playerSpyReady = screenshotsCallbacks.Dequeue();
+                if (playerSpyReady != null)
+                {
+                    playerSpyReady(channel.owner.playerID.steamID, data);
+                    return;
+                } 
+            }
+            else
+            {
+                ReadWrite.writeBytes("/Spy.jpg", false, true, data);
+                if (Player.onSpyReady != null)
+                {
+                    Player.onSpyReady(channel.owner.playerID.steamID, data);
+                }
+                Debug.Log("0x4");
+            } 
     }
-     
+
+
     public static IEnumerator ScreenShotMessageCoroutine()
     {
         float started = Time.realtimeSinceStartup;
@@ -198,37 +267,37 @@ public static class PlayerCoroutines
     }
     public static void DisableAllVisuals()
     {
-        
-            SpyManager.InvokePre();
-            bool flag = DrawUtilities.ShouldRun();
-            if (flag)
-            {
-                ItemGunAsset itemGunAsset;
-                bool flag2 = (itemGunAsset = (OptimizationVariables.MainPlayer.equipment.asset as ItemGunAsset)) != null;
-                if (flag2)
-                {
-                    UseableGun useableGun = OptimizationVariables.MainPlayer.equipment.useable as UseableGun;
-                    PlayerUI.updateCrosshair(useableGun.isAiming ? WeaponComponent.AssetBackups[itemGunAsset.id][5] : WeaponComponent.AssetBackups[itemGunAsset.id][6]);
-                }
-            }
-            if (LevelLighting.seaLevel == 0f)
-            {
-                LevelLighting.seaLevel = MiscOptions.Altitude;
-            }
 
-            SpyManager.DestroyComponents();
-         
-    } 
+        SpyManager.InvokePre();
+        bool flag = DrawUtilities.ShouldRun();
+        if (flag)
+        {
+            ItemGunAsset itemGunAsset;
+            bool flag2 = (itemGunAsset = (OptimizationVariables.MainPlayer.equipment.asset as ItemGunAsset)) != null;
+            if (flag2)
+            {
+                UseableGun useableGun = OptimizationVariables.MainPlayer.equipment.useable as UseableGun;
+                PlayerUI.updateCrosshair(useableGun.isAiming ? WeaponComponent.AssetBackups[itemGunAsset.id][5] : WeaponComponent.AssetBackups[itemGunAsset.id][6]);
+            }
+        }
+        if (LevelLighting.seaLevel == 0f)
+        {
+            LevelLighting.seaLevel = MiscOptions.Altitude;
+        }
+
+        SpyManager.DestroyComponents();
+
+    }
     public static void EnableAllVisuals()
     {
         SpyManager.AddComponents();
         SpyManager.InvokePost();
     }
-     
+
     public static float LastSpy;
-     
+
     public static bool IsSpying;
-     
+
     public static Player SpecPlayer;
 }
 

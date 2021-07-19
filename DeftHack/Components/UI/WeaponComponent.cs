@@ -166,8 +166,8 @@ public class WeaponComponent : MonoBehaviour
                         }
                         else
                         {
-                            WeaponComponent.fov.SetValue(Player.player.look, OptionsSettings.view);
-                            SDG.Unturned.MainCamera.instance.fieldOfView = OptionsSettings.view;
+                           // WeaponComponent.fov.SetValue(Player.player.look, OptionsSettings.view);
+                           // SDG.Unturned.MainCamera.instance.fieldOfView = OptionsSettings.view;
                         }
                     } 
 

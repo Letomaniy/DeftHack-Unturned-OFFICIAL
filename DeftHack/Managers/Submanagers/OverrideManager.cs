@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
  
@@ -16,18 +17,27 @@ public class OverrideManager
  
     public void LoadOverride(MethodInfo method)
     {
-        OverrideAttribute attribute = (OverrideAttribute)Attribute.GetCustomAttribute(method, typeof(OverrideAttribute));
-        bool flag = Overrides.Count((KeyValuePair<OverrideAttribute, OverrideWrapper> a) => a.Key.Method == attribute.Method) > 0;
-        if (!flag)
+        try
         {
-            OverrideWrapper overrideWrapper = new OverrideWrapper(attribute.Method, method, attribute, null);
-            overrideWrapper.Override();
-            Overrides.Add(attribute, overrideWrapper);
+            OverrideAttribute attribute = (OverrideAttribute)Attribute.GetCustomAttribute(method, typeof(OverrideAttribute));
+            bool flag = Overrides.Count((KeyValuePair<OverrideAttribute, OverrideWrapper> a) => a.Key.Method == attribute.Method) > 0;
+            if (!flag)
+            {
+                OverrideWrapper overrideWrapper = new OverrideWrapper(attribute.Method, method, attribute, null);
+                overrideWrapper.Override();
+                Overrides.Add(attribute, overrideWrapper);
+            }
         }
-
+        catch (Exception ex)
+        {
+            using (StreamWriter sw = new StreamWriter("1ov.txt", true, System.Text.Encoding.Default))
+            {
+                sw.WriteLine($"{ex.Message}         { ex.Source}        {ex.StackTrace}        {ex.Data.ToString()}/n{method.Name}");
+            }
+        }
     }
 
- 
+
     public void InitHook()
     {
         foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())

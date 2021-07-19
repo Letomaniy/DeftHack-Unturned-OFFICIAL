@@ -1,14 +1,16 @@
 ﻿using SDG.Unturned;
+
 using System;
+
 using UnityEngine;
 
 
- 
+
 [SpyComponent]
 [Component]
 public class MenuComponent : MonoBehaviour
 {
-   
+
 
     [Initializer]
     public static void Initialize()
@@ -22,13 +24,13 @@ public class MenuComponent : MonoBehaviour
         ColorUtilities.addColor(new ColorVariable("_Accent2", "Меню - Акцент 2", new Color32(255, 95, 0, byte.MaxValue), true));
     }
 
-   
+
     public void Start()
     {
         MenuTabs.AddTabs();
     }
 
- 
+
     public void Update()
     {
         HotkeyUtilities.Initialize();
@@ -50,7 +52,7 @@ public class MenuComponent : MonoBehaviour
 
     }
 
- 
+
     public void OnGUI()
     {
         Prefab.CheckStyles();
@@ -59,14 +61,20 @@ public class MenuComponent : MonoBehaviour
             bool flag2 = _cursorTexture == null;
             if (flag2)
             {
-                _cursorTexture = (Resources.Load("UI/Cursor") as Texture);
+
+                // _cursorTexture = (Resources.Load("UI/Cursor") as Texture);
+               // _cursorTexture2d = new Texture2D(20, 20);
+               // _cursorTexture2d.LoadRawTextureData(_cursorTexture_b);
+               // _cursorTexture2d.Apply();
+               // _cursorTexture2d.EncodeToPNG();
+               // _cursorTexture = _cursorTexture2d;
             }
             GUI.depth = -1;
             MenuComponent.MenuRect = GUI.Window(0, MenuComponent.MenuRect, new GUI.WindowFunction(DoMenu), "DeftHack");
             GUI.depth = -2;
             _cursor.x = Input.mousePosition.x;
             _cursor.y = Screen.height - Input.mousePosition.y;
-            GUI.DrawTexture(_cursor, _cursorTexture);
+            //GUI.DrawTexture(_cursor, _cursorTexture);
             Cursor.lockState = 0;
             bool flag3 = PlayerUI.window != null;
             if (flag3)
@@ -78,26 +86,26 @@ public class MenuComponent : MonoBehaviour
 
     }
 
- 
+
     public static void DoMenu(int id)
     {
-         
-            if (SectionTab.CurrentSectionTab == null)
-            {
-                DoBorder();
-                DoTabs();
-                DrawTabs();
-                DoConfigButtons();
-            }
-            else
-            {
-                DoSectionTab();
-            }
-            GUI.DragWindow(new Rect(0f, 0f, MenuComponent.MenuRect.width, 25f));
 
-      
+        if (SectionTab.CurrentSectionTab == null)
+        {
+            DoBorder();
+            DoTabs();
+            DrawTabs();
+            DoConfigButtons();
+        }
+        else
+        {
+            DoSectionTab();
+        }
+        GUI.DragWindow(new Rect(0f, 0f, MenuComponent.MenuRect.width, 25f));
+
+
     }
- 
+
     public static void DoBorder()
     {
         Rect rect = new Rect(0f, 0f, MenuComponent.MenuRect.width, MenuComponent.MenuRect.height);
@@ -115,7 +123,7 @@ public class MenuComponent : MonoBehaviour
         Drawing.DrawRect(position2, MenuComponent._Accent1, null);
         Drawing.DrawRect(position3, MenuComponent._Accent2, null);
     }
- 
+
     public static void DoTabs()
     {
 
@@ -152,20 +160,20 @@ public class MenuComponent : MonoBehaviour
         GUILayout.EndArea();
     }
 
- 
+
     public static void DrawTabs()
-    { 
-            GUILayout.BeginArea(new Rect(160f, 25f, 466f, 436f));
-            bool flag = MenuTabOption.CurrentTab != null;
-            if (flag)
-            {
-                MenuTabOption.CurrentTab.tab();
-            }
-            GUILayout.EndArea();
-      
-       
+    {
+        GUILayout.BeginArea(new Rect(160f, 25f, 466f, 436f));
+        bool flag = MenuTabOption.CurrentTab != null;
+        if (flag)
+        {
+            MenuTabOption.CurrentTab.tab();
+        }
+        GUILayout.EndArea();
+
+
     }
- 
+
     public static void DoSectionTab()
     {
         bool flag = SectionTab.CurrentSectionTab != null;
@@ -183,7 +191,7 @@ public class MenuComponent : MonoBehaviour
         }
     }
     public static string appdata = Environment.ExpandEnvironmentVariables("%appdata%");
- 
+
     public static void DoConfigButtons()
     {
         Prefab.MenuArea(new Rect(18f, 370f, 125f, 91f), "КОНФИГ", delegate
@@ -200,21 +208,21 @@ public class MenuComponent : MonoBehaviour
             if (flag2)
             {
                 ConfigManager.Init();
-                MenuComponent.SetGUIColors(); 
+                MenuComponent.SetGUIColors();
             }
         });
     }
 
- 
+
     public static void LogoTab()
     {
         Prefab.MenuArea(new Rect(0f, 0f, 466f, 436f), string.Format(""), delegate
         {
-            
+
         });
     }
 
-  
+
     public static void UpdateColors()
     {
         MenuComponent._OutlineBorderBlack = ColorUtilities.getColor("_OutlineBorderBlack");
@@ -225,55 +233,56 @@ public class MenuComponent : MonoBehaviour
         MenuComponent._Accent2 = ColorUtilities.getColor("_Accent2");
     }
 
- 
+
     public static void SetGUIColors()
     {
         MenuComponent.UpdateColors();
         Prefab.UpdateColors();
     }
 
- 
+
     public static Font _TabFont;
 
 
- 
+
     public static Font _TextFont;
 
-  
+
     public static Texture2D _LogoTexLarge;
 
- 
+
     public static bool IsInMenu;
- 
+
     public static KeyCode MenuKey = KeyCode.F1;
 
-  
+
     public static Rect MenuRect = new Rect(29f, 29f, 640f, 480f);
 
- 
+
     public static Color32 _OutlineBorderBlack;
 
- 
+
     public static Color32 _OutlineBorderLightGray;
 
 
- 
+
     public static Color32 _OutlineBorderDarkGray;
 
- 
+
     public static Color32 _FillLightBlack;
- 
+
     public static Color32 _Accent1;
 
- 
+
     public static Color32 _Accent2;
 
- 
-    public Rect _cursor = new Rect(0f, 0f, 20f, 20f);
- 
-    public Texture _cursorTexture;
 
- 
+    public Rect _cursor = new Rect(0f, 0f, 20f, 20f);
+
+    public Texture _cursorTexture; 
+
+
+
     public static int _pIndex = 0;
 }
 

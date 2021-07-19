@@ -20,11 +20,11 @@ public class InfoTab
                 GUILayout.Space(4f);
             }
             GUILayout.Label("Пожелания и жалобы по читу сюда:", Prefab._TextStyle, new GUILayoutOption[0]);
-            GUILayout.TextField("http://vk.me/defthack", Prefab._TextStyle, new GUILayoutOption[0]);
+            GUILayout.TextField("http://vk.me/beyondcheat", Prefab._TextStyle, new GUILayoutOption[0]);
             GUILayout.Space(2f);
             if (Prefab.Button("Сайт", 200f, 25f, new GUILayoutOption[0]))
             {
-                Application.OpenURL("https://vk.com/defthack");
+                Application.OpenURL("http://vk.com/beyondcheat");
             }
         });
     }

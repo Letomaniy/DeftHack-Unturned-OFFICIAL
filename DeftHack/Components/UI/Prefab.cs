@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 
-class Prefab
+public static class Prefab
 {
  
     [Initializer]
@@ -122,7 +122,6 @@ class Prefab
             texture2D3.SetPixel(0, 0, ColorUtilities.getColor("_TextStyleOn"));
             texture2D3.Apply();
             Prefab._ButtonStyle.active.background = texture2D3;
-
             Texture2D texture2D4 = new Texture2D(1, 1);
             texture2D4.SetPixel(0, 0, ColorUtilities.getColor("_TextStyleOn"));
             texture2D4.Apply();
@@ -563,7 +562,7 @@ class Prefab
      
     public static Color32 _ToggleBoxBG;
      
-    private static   int popupListHash = "PopupList".GetHashCode();
+    private static readonly int popupListHash = "PopupList".GetHashCode();
      
     public static Regex digitsOnly = new Regex("[^\\d]");
 }
