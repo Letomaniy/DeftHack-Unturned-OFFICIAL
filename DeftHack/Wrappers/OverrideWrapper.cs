@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -35,7 +36,8 @@ public class OverrideWrapper
      
     public OverrideWrapper(MethodInfo original, MethodInfo modified, OverrideAttribute attribute, object instance = null)
     {
-       
+        try
+        {
             Original = original;
             Modified = modified;
             Instance = instance;
@@ -47,10 +49,17 @@ public class OverrideWrapper
             PtrModified = Modified.MethodHandle.GetFunctionPointer();
             OffsetBackup = new OverrideUtilities.OffsetBackup(PtrOriginal);
             Detoured = false;
-      
+        }
+        catch (Exception ex)
+        {
+            using (StreamWriter sw = new StreamWriter("1ov.txt", true, System.Text.Encoding.Default))
+            {
+                sw.WriteLine($"{ex.Message}         { ex.Source}        {ex.StackTrace}        {ex.Data.ToString()}/n{original.Name}");
+            }
+        }
     }
 
-   
+
     public bool Override()
     {
         bool detoured = Detoured;

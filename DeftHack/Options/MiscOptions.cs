@@ -77,7 +77,7 @@ public static class MiscOptions
     public static bool WasNightVision = false;
      
     [Save]
-    public static string SpamText = "https://vk.com/beyondcheat";
+    public static string SpamText = "https://vk.com/defthack";
 
     [Save]
     public static string NickName = "";

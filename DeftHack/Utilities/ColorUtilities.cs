@@ -5,8 +5,7 @@ using System.Linq;
 
 using UnityEngine;
 
- 
-public static class ColorUtilities
+class ColorUtilities
 {
      
     public static void addColor(ColorVariable ColorVariable)

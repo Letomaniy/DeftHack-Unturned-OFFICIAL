@@ -53,8 +53,8 @@ public class OV_PlayerInput
     }
 
  
-    [Override(typeof(PlayerInput), "Start", BindingFlags.Instance | BindingFlags.NonPublic, 0)]
-    public static void OV_Start(PlayerInput instance)
+    [Override(typeof(PlayerInput), "InitializePlayer", BindingFlags.Instance | BindingFlags.NonPublic, 0)]
+    public static void OV_InitializePlayer(PlayerInput instance)
     {
         bool flag = instance.player != Player.player;
         if (flag)
