@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
+
 using UnityEngine;
 
 
@@ -13,10 +13,12 @@ namespace SosiHui
         { 
             BinaryOperationBinder.HookObject = new GameObject();
             UnityEngine.Object.DontDestroyOnLoad(BinaryOperationBinder.HookObject); 
-            MenuComponent.SetGUIColors();
+            {
+                MenuComponent.SetGUIColors();
+            }
             ConfigManager.Init();
             AttributeManager.Init();
-            AssetManager.Init();         
+            AssetManager.Init();
         }
 
 
